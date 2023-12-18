@@ -28,7 +28,7 @@ public class EmployeeController {
 
     @GetMapping("/duplicates")
     public ResponseEntity<List<Employee>> duplicates() {
-        List<Employee> employeesWithDuplicateProjects = employeeRepository.findEmployeesWithDuplicateProjects();
+        List<Employee> employeesWithDuplicateProjects = employeeRepository.employeesWithOverlappingProjectDates();
 
         if (employeesWithDuplicateProjects.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

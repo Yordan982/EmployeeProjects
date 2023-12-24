@@ -1,5 +1,5 @@
 # Employee Projects App
-The application manages the employees and the projects that they have worked on. It accepts a CSV file with the employees' data and returns the pair of two employees that worked on common projects for the longest period of days and exactly how many days they have spent on each project. It also supports CRUD operations.
+The application manages the employees and the projects that they have worked on. It accepts a CSV file with the employees' data and returns the pair of two employees that worked on common projects for the longest period of days and exactly how many days they have spent on each project. This is possible thanks to the sorting algorithm and the Two Pointers technique. The program also supports CRUD operations.
 
 ## Example of the input data from the CSV file:
 
@@ -62,11 +62,43 @@ On the first line it shows employeeId1, employeeId2 and spent days on common pro
 
 On each next line it breaks those days to each project and prints the projectId and the days spent on the project together.
 
-### CRUD Operations
-#### Employee Class
+## Implementation and solution
+
+The application uses a MySQL database and therefore it saves the data after each query automatically.
+
+The project implements Maven and Spring functionality, along with a few external libraries.
+
+### Finding the pair with the most overlapping days for common projects
+
+In order to find the pair of employees with the most days worked together, we have to go through all of them and check employee pairs one by one. Doing so would be extremely inefficient and time consuming, so the current algorithm uses sorting and a variation of the "Two Pointers" technique.
+
+#### How does it work
+
+First, we group the current records in the **employee_project** table by projectId. Second, we sort them by dateFrom, then by dateTo and by employeeId. Finally, we go through every project and check employee pairs for overlapping shifts.
+
+#### Efficiency of the resolution
+1. **Grouping records by project**: This allows us to skip projects with only 1 employee, without getting into the complicated logic of checking for overlapping. If the project has only one employee, there is obviously no overlap.
+2. **Sorting by dateFrom**: This allows us to skip **employee_project** records, without even knowing what is in the record.
+
+**Example**: We have the current records in the table below, sorted by dateFrom from Project #1:
+```
+Employee1 - from 01.12 to 05.12
+Employee2 - from 02.12 to 10.12
+Employee3 - from 06.12 to 10.12
+Employee4 - from 08.12 to 12.12
+Employee5 - from 10.12 to 15.12
+```
+The implemented logic will firstly check employee1 and employee2 for overlapping dates. There is clearly an overlap, so we are going to the next one - employee1 and employee3. Since they do not overlap, we know for a fact that employee1 does not overlap with employees 4 and 5 as well, without even knowing anything about their start dates. We are sure that employee3's dateFrom is after employee1's dateTo, and since all the dateFroms are sorted, we know that all the other employees' dateFroms are also after employee1's dateTo. This allows the program to break the loop and go to the next pair - employee2 and employee3, skipping unnecessary checks.
+
+To add some more efficiency into the mix, the result of the looping through the projects is stored into a Map with a key structured in the format **"firstEmployeeId, secondEmployeeId, projectId"**. This allows us to access the information stored faster, as searching by the key of a Map has a complexity of O(1).
+
+Once all the information is analyzed and stored, the only thing left is to check for the max value of all the employee pairs with their combined hours and print the result.
+
+## CRUD Operations
+### Employee Class
 1. **Create**
 
-Submit a **POST** query to **localhost:8080/employee/create** from Postman with the details of the user.
+Submit a **POST** query to **http://localhost:8080/employee/create** from Postman with the details of the user.
 
 Example of valid JSON data:
 ```
@@ -84,7 +116,7 @@ Ivan Ivanov, id: 2
 
 3. **Update**
 
-Submit a **PUT** query to **localhost:8080/employee/update/2** from Postman with the last name of the user, where 2 is the employeeId. The DTO is set up to update the lastName only.
+Submit a **PUT** query to **http://localhost:8080/employee/update/2** from Postman with the last name of the user, where 2 is the employeeId. The DTO is set up to update the lastName only.
 
 Example of valid JSON data:
 ```
@@ -103,10 +135,10 @@ Submit a **DELETE** query to **http://localhost:8080/employee/delete/2** from Po
 
 If the employee exists and is not linked to any projects from the **employee_project** table, the employee will be deleted.
 
-#### Project Class
+### Project Class
 1. **Create**
 
-Submit a **POST** query to **localhost:8080/project/create** from Postman with the project name.
+Submit a **POST** query to **http://localhost:8080/project/create** from Postman with the project name.
 
 Example of valid JSON data:
 ```
@@ -123,7 +155,7 @@ Project name: Online Banking, id: 2
 
 3. **Update**
 
-Submit a **PUT** query to **localhost:8080/project/update/2** from Postman with the project name, where 2 is the projectId.
+Submit a **PUT** query to **http://localhost:8080/project/update/2** from Postman with the project name, where 2 is the projectId.
 
 Example of valid JSON data:
 ```
@@ -142,37 +174,6 @@ Submit a **DELETE** query to **http://localhost:8080/project/delete/2** from Pos
 
 If the project exists and is not linked to any records from the **employee_project** table, the project will be deleted.
 
-## Implementation and solution
-
-The application uses a MySQL database and therefore it saves the data after each query automatically.
-
-The project implements Maven and Spring functionality, along with a few external libraries.
-
-### Finding the pair with the most overlapping days for common projects
-
-In order to find the pair of employees with the most days worked together, we have to go through all of them and check employee pairs one by one. Doing so would be extremely inefficient and time consuming, so the current algorithm uses sorting and a variation of the "Two Pointers" technique.
-
-#### How does it work
-
-First, we group the current records in the **employee_project** table by projectId. Second, we sort them by dateFrom, then by dateTo and by employeeId. Finally, we go through every project and check employee pairs for overlapping shifts.
-
-#### Efficiency of the resolution
-1. **Grouping records by project**: This allows us to skip projects with only 1 employee, without getting into the complicated logic of checking for overlapping. If the project has only one employee, there is obviously no overlap.
-2. **Sorting by dateFrom**: This allows us to skip **employee_project** records, without even knowing what is in the record. 
-
-**Example**: We have the current records in the table below, sorted by dateFrom from Project #1:
-```
-Employee1 - from 01.12 to 05.12
-Employee2 - from 02.12 to 10.12
-Employee3 - from 06.12 to 10.12
-Employee4 - from 08.12 to 12.12
-Employee5 - from 10.12 to 15.12
-```
-The implemented logic will firstly check employee1 and employee2 for overlapping dates. There is clearly an overlap, so we are going to the next one - employee1 and employee3. Since they do not overlap, we know for a fact that employee1 does not overlap with employees 4 and 5 as well, without even knowing anything about their start dates. We are sure that employee3's dateFrom is after employee1's dateTo, and since all the dateFroms are sorted, we know that all the other employees' dateFroms are also after employee1's dateTo. This allows the program to break the loop and go to the next pair - employee2 and employee3, skipping unnecessary checks.
-
-To add some more efficiency into the mix, the result of the looping through the projects is stored into a Map with a key structured in the format **"firstEmployeeId, secondEmployeeId, projectId"**. This allows us to access the information stored faster, as searching by the key of a Map has a complexity of O(1).
-
-Once all of the information is analyzed and stored, the only thing left is to check for the max value of all the employee pairs with their combined hours and print the result.
 
 ## License
 This project serves as the graduation task for the Sirma Academy (September-December 2023).

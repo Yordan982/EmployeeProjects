@@ -148,9 +148,9 @@ The application uses a MySQL database and therefore it saves the data after each
 
 The project implements Maven and Spring functionality, along with a few external libraries.
 
-### Finding the pair with the most overlapping hours for common projects
+### Finding the pair with the most overlapping days for common projects
 
-In order to find the pair of employees with the most hours worked together, we have to go through all of them and check employee pairs one by one. Doing so would be extremely inefficient and time consuming, so the current algorithm uses sorting and a variation of the "Two Pointers" technique.
+In order to find the pair of employees with the most days worked together, we have to go through all of them and check employee pairs one by one. Doing so would be extremely inefficient and time consuming, so the current algorithm uses sorting and a variation of the "Two Pointers" technique.
 
 #### How does it work
 

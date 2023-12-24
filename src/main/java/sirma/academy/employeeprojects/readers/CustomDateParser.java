@@ -1,5 +1,7 @@
 package sirma.academy.employeeprojects.readers;
 
+import org.springframework.stereotype.Component;
+
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -7,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static sirma.academy.employeeprojects.constants.Constants.*;
-
+@Component
 public class CustomDateParser {
     private static final List<String> DATE_FORMATS = Arrays.asList(
             "yyyy-MM-dd",
@@ -16,7 +18,7 @@ public class CustomDateParser {
             "MM-dd-yyyy"
     );
 
-    public static LocalDate parseDate(String input) throws ParseException {
+    public LocalDate parseDate(String input) throws ParseException {
         for (String pattern : DATE_FORMATS) {
             try {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);

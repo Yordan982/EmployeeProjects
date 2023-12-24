@@ -16,6 +16,12 @@ import static sirma.academy.employeeprojects.constants.Constants.*;
 @Component
 public class CSVCustomReader {
 
+    private final CustomDateParser customDateParser;
+
+    public CSVCustomReader(CustomDateParser customDateParser) {
+        this.customDateParser = customDateParser;
+    }
+
     public List<EmployeeProjectDTO> parseCSV(String filePath) {
         List<EmployeeProjectDTO> employeesFromFile = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath))) {
@@ -27,7 +33,7 @@ public class CSVCustomReader {
 
                 if (!"NULL".equals(employeeData[1])) {
                     try {
-                        currentEmployee.setDateFrom(CustomDateParser.parseDate(employeeData[1]));
+                        currentEmployee.setDateFrom(customDateParser.parseDate(employeeData[1]));
                     } catch (ParseException e) {
                         System.out.println(UNABLE_TO_READ_LINE);
                     }
@@ -38,7 +44,7 @@ public class CSVCustomReader {
 
                 if (employeeData.length == 4 && !"NULL".equals(employeeData[2])) {
                     try {
-                        currentEmployee.setDateTo(CustomDateParser.parseDate(employeeData[2]));
+                        currentEmployee.setDateTo(customDateParser.parseDate(employeeData[2]));
                     } catch (ParseException e) {
                         System.out.println(UNABLE_TO_READ_LINE);
                     }

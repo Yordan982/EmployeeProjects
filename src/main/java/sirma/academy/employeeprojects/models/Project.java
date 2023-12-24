@@ -26,4 +26,9 @@ public class Project {
     public void setProjectName(String projectName) {
         this.projectName = projectName;
     }
+
+    @Override
+    public String toString() {
+        return String.format(("Project name: %s, id: %d"), this.getProjectName(), this.getId());
+    }
 }

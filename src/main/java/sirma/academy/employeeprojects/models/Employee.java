@@ -1,56 +1,45 @@
 package sirma.academy.employeeprojects.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
-
-// TODO: Fix id strategy to reflect the read Employees from the CSV
+@Table(name = "employee")
 @Entity
-@Table(name = "employees")
 public class Employee {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "employee_id")
-    private Long employeeId;
-    @Column(name = "project_id", nullable = false)
-    private Long projectId;
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    @Column(name = "date_from", nullable = false)
-    private LocalDate dateFrom;
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    @Column(name = "date_to")
-    private LocalDate dateTo;
+    private Long id;
+    @Column(name = "first_name")
+    private String firstName;
+    @Column(name = "last_name")
+    private String lastName;
 
-    public Long getEmployeeId() {
-        return employeeId;
+    public Long getId() {
+        return id;
     }
 
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Long getProjectId() {
-        return projectId;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public LocalDate getDateFrom() {
-        return dateFrom;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setDateFrom(LocalDate dateFrom) {
-        this.dateFrom = dateFrom;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public LocalDate getDateTo() {
-        return dateTo;
-    }
-
-    public void setDateTo(LocalDate dateTo) {
-        this.dateTo = dateTo;
+    @Override
+    public String toString() {
+        return String.format(("%s %s, id: %d"), this.getFirstName(), this.getLastName(), this.getId());
     }
 }

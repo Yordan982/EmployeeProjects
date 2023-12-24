@@ -1,6 +1,7 @@
 package sirma.academy.employeeprojects.services;
 
 import org.springframework.stereotype.Service;
+import sirma.academy.employeeprojects.dtos.UpdateEmployeeDTO;
 import sirma.academy.employeeprojects.models.Employee;
 import sirma.academy.employeeprojects.repositories.EmployeeRepository;
 
@@ -14,8 +15,8 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-    public Employee add(Employee employee) {
-        return employeeRepository.save(employee);
+    public void save(Employee employee) {
+        employeeRepository.save(employee);
     }
 
     public void delete(Long id) {
@@ -23,7 +24,17 @@ public class EmployeeService {
         if (exists) {
             employeeRepository.deleteById(id);
         } else {
-            throw new IllegalArgumentException(INVALID_EMPLOYEE_ID);
+            throw new IllegalArgumentException(String.format(INVALID_EMPLOYEE_ID, id));
         }
+    }
+
+    public Employee findById(Long id) {
+        return this.employeeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(String.format(INVALID_EMPLOYEE_ID, id)));
+    }
+
+    public void update(Long id, UpdateEmployeeDTO updateEmployeeDTO) {
+        Employee employee = findById(id);
+        employee.setLastName(updateEmployeeDTO.getLastName());
+        this.save(employee);
     }
 }

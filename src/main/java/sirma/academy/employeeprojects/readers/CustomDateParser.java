@@ -6,7 +6,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
-//TODO: Fix the error message when one or more records could not be parsed
+import static sirma.academy.employeeprojects.constants.Constants.*;
+
 public class CustomDateParser {
     private static final List<String> DATE_FORMATS = Arrays.asList(
             "yyyy-MM-dd",
@@ -21,9 +22,9 @@ public class CustomDateParser {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
                 return LocalDate.parse(input, formatter);
             } catch (Exception e) {
-                System.out.println("Error parsing date with pattern " + pattern + ": " + e.getMessage());
+                System.out.printf((DATE_PATTERN_ERROR), pattern);
             }
         }
-        throw new ParseException("Unable to parse date: " + input, 0);
+        throw new ParseException(UNABLE_TO_PARSE_DATE + input, 0);
     }
 }
